@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 
 import java.time.LocalDate;
 
-@Entity
+@Entity             //mapping giữa đối tượng java và database
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

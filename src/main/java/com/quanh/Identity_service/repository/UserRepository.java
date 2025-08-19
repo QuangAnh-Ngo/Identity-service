@@ -7,5 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
 
+    //Phải đặt đúng tên - spring sẽ tạo proxy class imple interface này trong runtime
     boolean existsByUsername(String username);
+
 }
