@@ -1,5 +1,6 @@
 package com.quanh.Identity_service.controller;
 
+import com.quanh.Identity_service.dto.request.ApiResponse;
 import com.quanh.Identity_service.dto.request.UserCreationRequest;
 import com.quanh.Identity_service.dto.request.UserUpdateRequest;
 import com.quanh.Identity_service.entity.User;
@@ -16,9 +17,19 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /*
     @PostMapping
     User createUser(@RequestBody @Valid UserCreationRequest request){
         return userService.createUser(request);
+    }
+    */
+    @PostMapping
+    ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request){
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+
+        apiResponse.setResult(userService.createUser(request));
+
+        return apiResponse;
     }
 
     @GetMapping
