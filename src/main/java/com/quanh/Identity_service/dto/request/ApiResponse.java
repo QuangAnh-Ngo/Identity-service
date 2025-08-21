@@ -1,12 +1,19 @@
 package com.quanh.Identity_service.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse <T> {              //Chuẩn hóa cấu trúc JSON cho frontend
-    private int code = 1000;                //Hoặc có thể setCode ở trong UserController
-    private String message;
-    private T result;
+    int code = 1000;                //Hoặc có thể setCode ở trong UserController
+    String message;
+    T result;
 
     public int getCode() {
         return code;
