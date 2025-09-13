@@ -1,0 +1,39 @@
+# Compiled Java class files
+*.class
+
+# Log files
+*.log
+*.log.*
+
+# Package files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven build directory
+target/
+
+# IDE configuration files
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# VM crash logs
+hs_err_pid*
+
+# Editor-based HTTP Client requests
+/httpRequests/
+
+# IntelliJ specific
+/shelf/
+workspace.xml
