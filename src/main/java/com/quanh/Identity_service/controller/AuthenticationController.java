@@ -1,8 +1,11 @@
 package com.quanh.Identity_service.controller;
 
+import com.nimbusds.jose.JOSEException;
 import com.quanh.Identity_service.dto.request.ApiResponse;
 import com.quanh.Identity_service.dto.request.AuthenticationRequest;
+import com.quanh.Identity_service.dto.request.IntrospectRequest;
 import com.quanh.Identity_service.dto.response.AuthenticationResponse;
+import com.quanh.Identity_service.dto.response.IntrospectResponse;
 import com.quanh.Identity_service.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -19,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
     AuthenticationService authenticationService;
 
-    @PostMapping("/log-in")
+    @PostMapping("/token")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
         /*boolean result = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder()
@@ -30,6 +35,14 @@ public class AuthenticationController {
          */
         var result = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder()
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/introspect")
+    ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
+        var result = authenticationService.introspect(request);
+        return ApiResponse.<IntrospectResponse>builder()
                 .result(result)
                 .build();
     }

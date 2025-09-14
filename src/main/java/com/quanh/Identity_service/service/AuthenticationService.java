@@ -2,10 +2,14 @@ package com.quanh.Identity_service.service;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import com.quanh.Identity_service.controller.AuthenticationController;
 import com.quanh.Identity_service.dto.request.AuthenticationRequest;
+import com.quanh.Identity_service.dto.request.IntrospectRequest;
 import com.quanh.Identity_service.dto.response.AuthenticationResponse;
+import com.quanh.Identity_service.dto.response.IntrospectResponse;
 import com.quanh.Identity_service.exception.AppException;
 import com.quanh.Identity_service.exception.ErrorCode;
 import com.quanh.Identity_service.repository.UserRepository;
@@ -14,10 +18,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -30,8 +36,24 @@ public class AuthenticationService {
     UserRepository userRepository;
 
     @NonFinal
-    protected static final String SIGNER_KEY =
-        "9n7IunqqKMwHgX2ANCN87SYAwEX9B4tROoKjeEbk58eN/XU1G9pLEt0HUJCwjZM6";
+    @Value("${JWT_SIGNER_KEY}")
+    String SIGNER_KEY;      //If final, it will be null
+
+    public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
+        var token = request.getToken();
+
+        JWSVerifier jwsVerifier = new MACVerifier(SIGNER_KEY.getBytes());
+
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        var verified = signedJWT.verify(jwsVerifier);
+
+        return IntrospectResponse.builder()
+                .valid(verified && expiryTime.after(new Date()))
+                .build();
+    }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
@@ -66,6 +88,7 @@ public class AuthenticationService {
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                 ))
+                .claim("Custom-Claim", "Custom-Value")
                 .build();
 
         Payload payload = new Payload(jwsClaimsSet.toJSONObject());
