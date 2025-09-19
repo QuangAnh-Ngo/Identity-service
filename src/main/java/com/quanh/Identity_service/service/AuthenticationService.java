@@ -37,7 +37,7 @@ public class AuthenticationService {
 
     @NonFinal
     @Value("${JWT_SIGNER_KEY}")
-    String SIGNER_KEY;      //If final, it will be null
+    protected String SIGNER_KEY;      //If final, it will be null
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
