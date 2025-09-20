@@ -5,7 +5,6 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import com.quanh.Identity_service.controller.AuthenticationController;
 import com.quanh.Identity_service.dto.request.AuthenticationRequest;
 import com.quanh.Identity_service.dto.request.IntrospectRequest;
 import com.quanh.Identity_service.dto.response.AuthenticationResponse;
@@ -36,7 +35,7 @@ public class AuthenticationService {
     UserRepository userRepository;
 
     @NonFinal
-    @Value("${JWT_SIGNER_KEY}")
+    @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;      //If final, it will be null
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
