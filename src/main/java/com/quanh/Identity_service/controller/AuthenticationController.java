@@ -1,7 +1,7 @@
 package com.quanh.Identity_service.controller;
 
 import com.nimbusds.jose.JOSEException;
-import com.quanh.Identity_service.dto.request.ApiResponse;
+import com.quanh.Identity_service.dto.response.ApiResponse;
 import com.quanh.Identity_service.dto.request.AuthenticationRequest;
 import com.quanh.Identity_service.dto.request.IntrospectRequest;
 import com.quanh.Identity_service.dto.response.AuthenticationResponse;

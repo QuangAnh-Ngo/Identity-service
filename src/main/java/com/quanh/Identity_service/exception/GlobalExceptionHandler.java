@@ -1,6 +1,6 @@
 package com.quanh.Identity_service.exception;
 
-import com.quanh.Identity_service.dto.request.ApiResponse;
+import com.quanh.Identity_service.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
