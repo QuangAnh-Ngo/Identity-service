@@ -11,7 +11,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse <T> {              //Chuẩn hóa cấu trúc JSON cho frontend
+    @Builder.Default
     int code = 1000;                //Hoặc có thể setCode ở trong UserController
+
     String message;
     T result;
 }

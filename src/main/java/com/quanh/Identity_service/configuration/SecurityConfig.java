@@ -32,14 +32,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users")
-                        .hasAnyAuthority( "ROLE_ADMIN")// can use .hasRole("Role.ADMIN.name()")
-                        .anyRequest().authenticated());
+                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+                        .permitAll()
+                        //.requestMatchers(HttpMethod.GET, "/users") //đã chuyển sang method security, nếu để lại sẽ không catch được exception
+                        //.hasAnyAuthority( "ROLE_ADMIN")// can use .hasRole("Role.ADMIN.name()")
+                        .anyRequest()
+                        .authenticated());
+
         httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwtConfigurer ->
-                        jwtConfigurer.decoder(jwtDecoder())
+                oauth2.jwt(jwtConfigurer -> jwtConfigurer
+                                .decoder(jwtDecoder())
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
         );
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable); //lamda method
