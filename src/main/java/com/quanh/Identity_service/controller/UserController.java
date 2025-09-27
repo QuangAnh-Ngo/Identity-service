@@ -50,6 +50,7 @@ public class UserController {
 
     @GetMapping
     ApiResponse<List<UserResponse>> getUsers(){
+        //cho phép truy cập thông tin chi tiết về người dùng đã được xác thực bên trong phương thức
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
         log.info("username: {}", authentication.getName());
@@ -75,6 +76,13 @@ public class UserController {
 
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getUser(userId))
+                .build();
+    }
+
+    @GetMapping("/myInfo")
+    ApiResponse<UserResponse> getMyInfo(){
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getMyInfo())
                 .build();
     }
 
