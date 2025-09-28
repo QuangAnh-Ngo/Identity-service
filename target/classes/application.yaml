@@ -10,7 +10,7 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update  #Khi có entity tự động tạo script để tạo bảng (chỉ sử dụng trong môi trường dev)
     show-sql: true
 jwt:
   signerKey: "${JWT_SIGNER_KEY}"

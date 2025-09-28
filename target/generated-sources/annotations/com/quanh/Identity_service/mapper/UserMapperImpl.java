@@ -4,14 +4,12 @@ import com.quanh.Identity_service.dto.request.UserCreationRequest;
 import com.quanh.Identity_service.dto.request.UserUpdateRequest;
 import com.quanh.Identity_service.dto.response.UserResponse;
 import com.quanh.Identity_service.entity.User;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-09-25T23:10:16+0700",
+    date = "2025-09-28T01:34:06+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.8 (Microsoft)"
 )
 @Component
@@ -59,10 +57,6 @@ public class UserMapperImpl implements UserMapper {
         userResponse.firstName( user.getFirstName() );
         userResponse.lastName( user.getLastName() );
         userResponse.dob( user.getDob() );
-        Set<String> set = user.getRoles();
-        if ( set != null ) {
-            userResponse.roles( new LinkedHashSet<String>( set ) );
-        }
 
         return userResponse.build();
     }
