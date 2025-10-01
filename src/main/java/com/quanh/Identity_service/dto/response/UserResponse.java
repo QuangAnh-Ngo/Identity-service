@@ -1,6 +1,7 @@
 package com.quanh.Identity_service.dto.response;
 
 import com.quanh.Identity_service.enums.Role;
+import jakarta.persistence.ManyToMany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -19,5 +20,7 @@ public class UserResponse {
     String firstName;
     String lastName;
     LocalDate dob;
-    //Set<Role> roles;   //Không trả về role cho frontend
+
+    @ManyToMany
+    Set<RoleResponse> roles;
 }

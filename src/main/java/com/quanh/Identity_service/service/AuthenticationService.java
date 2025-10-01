@@ -107,8 +107,16 @@ public class AuthenticationService {
 
     private String buildScope(User user){
         StringJoiner stringJoiner = new StringJoiner(" ");
-        //if (!CollectionUtils.isEmpty(user.getRoles()))
-            //user.getRoles().forEach(stringJoiner::add);
+
+        if (!CollectionUtils.isEmpty(user.getRoles()))
+            user.getRoles().forEach(role -> {
+                stringJoiner.add("ROLE_" + role.getName());
+
+                if (!CollectionUtils.isEmpty(role.getPermissions()))
+                    role.getPermissions().forEach(permission ->{
+                        stringJoiner.add(permission.getName()); //Lưu ý: header token có kích thước giới hạn => cân nhắc thêm vừa đủ
+                    });
+            });
 
         return stringJoiner.toString();
     }

@@ -54,7 +54,8 @@ public class SecurityConfig {
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter(){
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_"); //Customize prefix, default is "SCOPE_"
+        //jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_"); //Customize prefix, default is "SCOPE_"
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix(""); //Sẽ thêm ROLE_ thủ công trong header token qua method buildScope trong config
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);

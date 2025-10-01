@@ -2,12 +2,14 @@ package com.quanh.Identity_service.service;
 
 import com.quanh.Identity_service.dto.request.UserCreationRequest;
 import com.quanh.Identity_service.dto.request.UserUpdateRequest;
+import com.quanh.Identity_service.dto.response.RoleResponse;
 import com.quanh.Identity_service.dto.response.UserResponse;
 import com.quanh.Identity_service.entity.User;
 import com.quanh.Identity_service.enums.Role;
 import com.quanh.Identity_service.exception.AppException;
 import com.quanh.Identity_service.exception.ErrorCode;
 import com.quanh.Identity_service.mapper.UserMapper;
+import com.quanh.Identity_service.repository.RoleRepository;
 import com.quanh.Identity_service.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ import java.util.List;
 @Slf4j
 public class UserService {
     UserRepository userRepository;
+    RoleRepository roleRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
@@ -79,6 +82,10 @@ public class UserService {
                         .orElseThrow(() -> new RuntimeException("User not found"));
 
         userMapper.updateUser(user, request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        var roles = roleRepository.findAllById(request.getRoles()); //var = List<Role>
+        user.setRoles(new HashSet<>(roles));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
@@ -88,6 +95,7 @@ public class UserService {
     }*/
 
     @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasAuthority('APPROVE_POST')") //check permission
     public List<UserResponse> getUsers(){
         return userRepository.findAll().stream()
                 .map(userMapper::toUserResponse)
