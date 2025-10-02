@@ -97,6 +97,8 @@ public enum ErrorCode {
      * </ul>
      */
     UNAUTHORIZE(1007, "Access denied", HttpStatus.FORBIDDEN),
+    DOB_INVALID(1008, "User must be over 18", HttpStatus.BAD_REQUEST),
+
     ;
 
     private int code;
