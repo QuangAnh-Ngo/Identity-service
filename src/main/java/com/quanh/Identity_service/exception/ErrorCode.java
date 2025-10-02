@@ -44,7 +44,7 @@ public enum ErrorCode {
      * <li><b>Gợi ý cho Client:</b> Hiển thị thông báo lỗi validation ngay bên dưới trường nhập username.</li>
      * </ul>
      */
-    USERNAME_INVALID(1003, "User name must be at least 3 characters", HttpStatus.BAD_REQUEST),
+    USERNAME_INVALID(1003, "User name must be at least {min} characters", HttpStatus.BAD_REQUEST),
 
     /**
      * Lỗi validation cho trường password, không đáp ứng yêu cầu (ví dụ: độ dài tối thiểu).
@@ -54,7 +54,7 @@ public enum ErrorCode {
      * <li><b>Gợi ý cho Client:</b> Hiển thị yêu cầu về mật khẩu ngay bên dưới trường nhập liệu.</li>
      * </ul>
      */
-    PASSWORD_INVALID(1004, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST),
+    PASSWORD_INVALID(1004, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
 
     /**
      * Lỗi cho biết người dùng được tìm kiếm không tồn tại trong hệ thống.
@@ -97,7 +97,7 @@ public enum ErrorCode {
      * </ul>
      */
     UNAUTHORIZE(1007, "Access denied", HttpStatus.FORBIDDEN),
-    DOB_INVALID(1008, "User must be over 18", HttpStatus.BAD_REQUEST),
+    DOB_INVALID(1008, "User must be over {min}", HttpStatus.BAD_REQUEST),
 
     ;
 
