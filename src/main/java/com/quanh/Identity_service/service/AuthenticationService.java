@@ -22,6 +22,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -39,7 +40,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationService {
     UserRepository userRepository;
-    PasswordEncoder passwordEncoder;
+    //PasswordEncoder passwordEncoder; Circular dependency
     InvalidatedTokenRepository invalidatedTokenRepository;
 
     @NonFinal
@@ -48,21 +49,27 @@ public class AuthenticationService {
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
-        verifyToken(token);
+        boolean isValid = true;
+
+        try {
+            verifyToken(token);
+        } catch (AppException e){
+            isValid = false;
+        }
 
         return IntrospectResponse.builder()
-                .valid(true)
+                .valid(isValid)
                 .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
-
         /*
         return passwordEncoder.matches(request.getPassword(), user.getPassword());
          */
-
         boolean authenticated = passwordEncoder.matches(request.getPassword(),
                 user.getPassword());
 
@@ -101,6 +108,9 @@ public class AuthenticationService {
         var verified = signedJWT.verify(jwsVerifier);
 
         if (!verified && expiryTime.after(new Date()))
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+
+        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
         return signedJWT;
