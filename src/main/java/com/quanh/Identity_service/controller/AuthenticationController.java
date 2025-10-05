@@ -2,6 +2,7 @@ package com.quanh.Identity_service.controller;
 
 import com.nimbusds.jose.JOSEException;
 import com.quanh.Identity_service.dto.request.LogoutRequest;
+import com.quanh.Identity_service.dto.request.RefreshRequest;
 import com.quanh.Identity_service.dto.response.ApiResponse;
 import com.quanh.Identity_service.dto.request.AuthenticationRequest;
 import com.quanh.Identity_service.dto.request.IntrospectRequest;
@@ -53,6 +54,15 @@ public class AuthenticationController {
             throws ParseException, JOSEException {
         authenticationService.logout(request);
         return ApiResponse.<Void>builder()
+                .build();
+    }
+
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> refresh(@RequestBody RefreshRequest request)
+            throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .result(result)
                 .build();
     }
 }

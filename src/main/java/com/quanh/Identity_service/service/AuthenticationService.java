@@ -8,6 +8,7 @@ import com.nimbusds.jwt.SignedJWT;
 import com.quanh.Identity_service.dto.request.AuthenticationRequest;
 import com.quanh.Identity_service.dto.request.IntrospectRequest;
 import com.quanh.Identity_service.dto.request.LogoutRequest;
+import com.quanh.Identity_service.dto.request.RefreshRequest;
 import com.quanh.Identity_service.dto.response.AuthenticationResponse;
 import com.quanh.Identity_service.dto.response.IntrospectResponse;
 import com.quanh.Identity_service.entity.InvalidatedToken;
@@ -96,6 +97,30 @@ public class AuthenticationService {
                 .build();
 
         invalidatedTokenRepository.save(invalidatedToken);
+    }
+
+    public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+        var signedJWT = verifyToken(request.getToken());
+
+        String jit = signedJWT.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        String username = signedJWT.getJWTClaimsSet().getSubject();
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        var token = generateToken(user);
+        return AuthenticationResponse.builder()
+                .token(token)
+                .authenticated(true)
+                .build();
     }
 
     private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
